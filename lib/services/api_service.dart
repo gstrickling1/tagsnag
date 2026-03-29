@@ -5,7 +5,7 @@ import '../models/suggestion.dart';
 
 class ApiService {
   // TODO: Update with your deployed backend URL
-  static const String baseUrl = 'http://localhost:8000/api';
+  static const String baseUrl = 'https://tagsnag-qs2s.onrender.com/api';
 
   static Future<PlateResult> checkPlate(String plate, {String state = 'GA'}) async {
     final response = await http.post(

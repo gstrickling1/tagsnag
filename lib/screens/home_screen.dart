@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/plate_input.dart';
+import '../widgets/state_selector.dart';
 import '../utils/plate_validator.dart';
 import '../services/api_service.dart';
 import 'results_screen.dart';
@@ -15,6 +16,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _plateController = TextEditingController();
   final _interestController = TextEditingController();
+  String _selectedState = 'GA';
   bool _isCheckingPlate = false;
   bool _isLoadingSuggestions = false;
 
@@ -37,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _isCheckingPlate = true);
 
     try {
-      final result = await ApiService.checkPlate(plate);
+      final result = await ApiService.checkPlate(plate, state: _selectedState);
       if (!mounted) return;
       Navigator.push(
         context,
@@ -61,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _isLoadingSuggestions = true);
 
     try {
-      final suggestions = await ApiService.getSuggestions(interest);
+      final suggestions = await ApiService.getSuggestions(interest, state: _selectedState);
       if (!mounted) return;
       Navigator.push(
         context,
@@ -69,6 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (_) => SuggestionsScreen(
             interest: interest,
             initialSuggestions: suggestions,
+            state: _selectedState,
           ),
         ),
       );
@@ -117,7 +120,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 32),
+
+                  // State Selector
+                  StateSelector(
+                    selectedState: _selectedState,
+                    onChanged: (state) => setState(() => _selectedState = state),
+                  ),
+                  const SizedBox(height: 24),
 
                   // Check a Plate section
                   _buildSectionCard(

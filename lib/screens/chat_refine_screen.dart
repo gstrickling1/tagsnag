@@ -6,11 +6,13 @@ import 'results_screen.dart';
 class ChatRefineScreen extends StatefulWidget {
   final String interest;
   final List<String> existingSuggestions;
+  final String state;
 
   const ChatRefineScreen({
     super.key,
     required this.interest,
     required this.existingSuggestions,
+    this.state = 'GA',
   });
 
   @override
@@ -61,6 +63,7 @@ class _ChatRefineScreenState extends State<ChatRefineScreen> {
         interest: widget.interest,
         message: text,
         history: _apiHistory,
+        state: widget.state,
       );
 
       _apiHistory.add({'role': 'user', 'content': text});
@@ -91,7 +94,7 @@ class _ChatRefineScreenState extends State<ChatRefineScreen> {
 
   Future<void> _checkPlate(String plate) async {
     try {
-      final result = await ApiService.checkPlate(plate);
+      final result = await ApiService.checkPlate(plate, state: widget.state);
       if (!mounted) return;
       setState(() => _checkedStatuses[plate] = result.status);
       Navigator.push(

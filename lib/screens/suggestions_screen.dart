@@ -7,11 +7,13 @@ import 'results_screen.dart';
 class SuggestionsScreen extends StatefulWidget {
   final String interest;
   final List<String> initialSuggestions;
+  final String state;
 
   const SuggestionsScreen({
     super.key,
     required this.interest,
     required this.initialSuggestions,
+    this.state = 'GA',
   });
 
   @override
@@ -35,7 +37,7 @@ class _SuggestionsScreenState extends State<SuggestionsScreen> {
     setState(() => _checkingPlate = plate);
 
     try {
-      final result = await ApiService.checkPlate(plate);
+      final result = await ApiService.checkPlate(plate, state: widget.state);
       if (!mounted) return;
 
       setState(() {
@@ -153,6 +155,7 @@ class _SuggestionsScreenState extends State<SuggestionsScreen> {
                           builder: (_) => ChatRefineScreen(
                             interest: widget.interest,
                             existingSuggestions: _suggestions,
+                            state: widget.state,
                           ),
                         ),
                       ).then((newSuggestions) {

@@ -3,7 +3,7 @@ from fastapi import APIRouter
 from models.schemas import PlateCheckRequest, PlateCheckResponse, StateRules
 from scrapers.georgia import get_official_check_url
 from services.scraper import check_plate
-from services.validator import get_rules, validate_plate
+from services.validator import get_all_states, get_rules, validate_plate
 
 router = APIRouter(prefix="/api", tags=["plates"])
 
@@ -23,7 +23,7 @@ async def check_plate_endpoint(req: PlateCheckRequest):
     messages = {
         "not_found": "Great news! This plate appears to be available. Visit your county tag office to claim it!",
         "assigned": "Sorry, this plate is already taken. Try a different combination!",
-        "unknown": "Tap below to check availability on the official Georgia DRIVES site.",
+        "unknown": "Tap below to check availability on your state's official site.",
     }
 
     return PlateCheckResponse(
@@ -33,6 +33,11 @@ async def check_plate_endpoint(req: PlateCheckRequest):
         message=messages.get(status, ""),
         official_check_url=official_url,
     )
+
+
+@router.get("/states")
+async def list_states():
+    return {"states": get_all_states()}
 
 
 @router.get("/rules/{state}", response_model=StateRules)
