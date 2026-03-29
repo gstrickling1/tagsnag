@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     final plate = _plateController.text.trim().toUpperCase();
-    final validation = PlateValidator.validate(plate);
+    final validation = PlateValidator.validate(plate, state: _selectedState);
 
     if (!validation.isValid) {
       _showError(validation.message);
@@ -149,10 +149,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           controller: _plateController,
                           hintText: 'GODAWGS',
                           onSubmit: _checkPlate,
+                          maxLength: _selectedState != null && stateRules.containsKey(_selectedState)
+                              ? stateRules[_selectedState]!.maxLength
+                              : 8,
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Max 7 characters  |  Letters, numbers & spaces',
+                          _selectedState != null && stateRules.containsKey(_selectedState)
+                              ? stateRules[_selectedState]!.notes
+                              : 'Select a state to see plate rules',
                           style: TextStyle(fontSize: 12, color: Colors.grey[500]),
                         ),
                         const SizedBox(height: 16),

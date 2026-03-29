@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../utils/plate_validator.dart';
-
 class PlateInput extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final VoidCallback? onSubmit;
   final bool showValidation;
+  final int maxLength;
 
   const PlateInput({
     super.key,
@@ -14,6 +13,7 @@ class PlateInput extends StatelessWidget {
     this.hintText = 'Enter plate text',
     this.onSubmit,
     this.showValidation = true,
+    this.maxLength = 8,
   });
 
   @override
@@ -21,9 +21,9 @@ class PlateInput extends StatelessWidget {
     return TextField(
       controller: controller,
       textCapitalization: TextCapitalization.characters,
-      maxLength: PlateValidator.maxLength,
+      maxLength: maxLength,
       inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9 ]')),
+        FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z0-9 &\-+']")),
         UpperCaseTextFormatter(),
       ],
       style: const TextStyle(
