@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/plate_result.dart';
 import '../utils/us_states.dart';
+import 'claim_guide_screen.dart';
 
 class ResultsScreen extends StatelessWidget {
   final PlateResult result;
@@ -161,6 +162,36 @@ class ResultsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                 ],
+
+                // "It's Available" button
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ClaimGuideScreen(
+                            plate: result.plate,
+                            state: state,
+                          ),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.celebration),
+                    label: const Text("It's Available! Help Me Get It"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green[700],
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
 
                 // Back button
                 SizedBox(

@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 from models.schemas import PlateCheckRequest, PlateCheckResponse, StateRules
 from services.scraper import check_plate
+from services.state_claim_info import get_claim_info
 from services.state_urls import get_state_plate_url
 from services.validator import get_all_states, get_rules, validate_plate
 
@@ -38,6 +39,14 @@ async def check_plate_endpoint(req: PlateCheckRequest):
 @router.get("/states")
 async def list_states():
     return {"states": get_all_states()}
+
+
+@router.get("/claim-info/{state}")
+async def get_state_claim_info(state: str):
+    info = get_claim_info(state)
+    if not info:
+        return {"error": f"No claim info for state: {state}"}
+    return {"state": state.upper(), **info}
 
 
 @router.get("/rules/{state}", response_model=StateRules)
