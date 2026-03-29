@@ -16,7 +16,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _plateController = TextEditingController();
   final _interestController = TextEditingController();
-  String _selectedState = 'GA';
+  String? _selectedState;
   bool _isCheckingPlate = false;
   bool _isLoadingSuggestions = false;
 
@@ -28,6 +28,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _checkPlate() async {
+    if (_selectedState == null) {
+      _showError('Please select your state first.');
+      return;
+    }
+
     final plate = _plateController.text.trim().toUpperCase();
     final validation = PlateValidator.validate(plate);
 
@@ -39,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _isCheckingPlate = true);
 
     try {
-      final result = await ApiService.checkPlate(plate, state: _selectedState);
+      final result = await ApiService.checkPlate(plate, state: _selectedState!);
       if (!mounted) return;
       Navigator.push(
         context,
@@ -54,6 +59,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _getSuggestions() async {
+    if (_selectedState == null) {
+      _showError('Please select your state first.');
+      return;
+    }
+
     final interest = _interestController.text.trim();
     if (interest.isEmpty) {
       _showError('Please enter an area of interest.');
@@ -63,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _isLoadingSuggestions = true);
 
     try {
-      final suggestions = await ApiService.getSuggestions(interest, state: _selectedState);
+      final suggestions = await ApiService.getSuggestions(interest, state: _selectedState!);
       if (!mounted) return;
       Navigator.push(
         context,
@@ -71,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (_) => SuggestionsScreen(
             interest: interest,
             initialSuggestions: suggestions,
-            state: _selectedState,
+            state: _selectedState!,
           ),
         ),
       );
