@@ -147,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         PlateInput(
                           controller: _plateController,
-                          hintText: 'RAHTECH',
+                          hintText: 'GOJKTS',
                           onSubmit: _checkPlate,
                           maxLength: _selectedState != null && stateRules.containsKey(_selectedState)
                               ? stateRules[_selectedState]!.maxLength
