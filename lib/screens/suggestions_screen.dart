@@ -48,7 +48,7 @@ class _SuggestionsScreenState extends State<SuggestionsScreen> {
       // Also navigate to results screen
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => ResultsScreen(result: result)),
+        MaterialPageRoute(builder: (_) => ResultsScreen(result: result, state: widget.state)),
       );
     } catch (e) {
       if (!mounted) return;

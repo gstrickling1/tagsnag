@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (!mounted) return;
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => ResultsScreen(result: result)),
+        MaterialPageRoute(builder: (_) => ResultsScreen(result: result, state: _selectedState!)),
       );
     } catch (e) {
       if (!mounted) return;

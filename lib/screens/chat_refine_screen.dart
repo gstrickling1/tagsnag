@@ -99,7 +99,7 @@ class _ChatRefineScreenState extends State<ChatRefineScreen> {
       setState(() => _checkedStatuses[plate] = result.status);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => ResultsScreen(result: result)),
+        MaterialPageRoute(builder: (_) => ResultsScreen(result: result, state: widget.state)),
       );
     } catch (e) {
       if (!mounted) return;

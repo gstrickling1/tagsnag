@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/plate_result.dart';
+import '../utils/us_states.dart';
 
 class ResultsScreen extends StatelessWidget {
   final PlateResult result;
+  final String state;
 
-  const ResultsScreen({super.key, required this.result});
+  const ResultsScreen({super.key, required this.result, this.state = 'GA'});
 
   IconData get _statusIcon {
     switch (result.status) {
@@ -82,7 +84,7 @@ class ResultsScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        'GEORGIA',
+                        (usStates[state] ?? state).toUpperCase(),
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
