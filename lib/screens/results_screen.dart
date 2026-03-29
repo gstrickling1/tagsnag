@@ -142,7 +142,7 @@ class ResultsScreen extends StatelessWidget {
                         }
                       },
                       icon: const Icon(Icons.open_in_new),
-                      label: const Text('Check on Georgia DRIVES'),
+                      label: Text('Check on ${usStates[state] ?? state} DMV'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue[800],
                         foregroundColor: Colors.white,

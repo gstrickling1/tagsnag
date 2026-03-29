@@ -1,0 +1,62 @@
+# Official state DMV URLs for vanity/personalized plate availability checking
+# Where a direct plate checker exists, that URL is used.
+# Otherwise, the state's general personalized plate page is linked.
+
+STATE_PLATE_CHECK_URLS = {
+    "AL": "https://www.revenue.alabama.gov/motor-vehicle/license-plate-and-registration-information/",
+    "AK": "https://doa.alaska.gov/dmv/reg/plates.htm",
+    "AZ": "https://azmvdnow.gov/plates",
+    "AR": "https://www.dfa.arkansas.gov/motor-vehicle/personalized-plates/",
+    "CA": "https://www.dmv.ca.gov/wasapp/ipp2/initPers.do",
+    "CO": "https://mydmv.colorado.gov/_/#1",
+    "CT": "https://portal.ct.gov/dmv/plates/plates",
+    "DE": "https://dmv.de.gov/public.ejs?command=PublicVanityPlate",
+    "FL": "https://services.flhsmv.gov/MVCheckPersonalPlate/",
+    "GA": "https://eservices.drives.ga.gov/?Link=Prestige",
+    "HI": "https://myvehicle.hawaiicounty.gov/",
+    "ID": "https://www.itd.idaho.gov/itddmv/?LinkID=plate",
+    "IL": "https://www.ilsos.gov/pickaplate/",
+    "IN": "https://www.in.gov/bmv/registration-plates/personalized-plates/",
+    "IA": "https://iowadot.gov/mvd/vehicleregistration/personalized.aspx",
+    "KS": "https://www.ksrevenue.gov/dovplates.html",
+    "KY": "https://drive.ky.gov/Plates-and-Registration/Pages/Personalized-Plates.aspx",
+    "LA": "https://expresslane.org/",
+    "ME": "https://www.maine.gov/sos/bmv/registration/vanity.html",
+    "MD": "https://egov.maryland.gov/mva/VanityPlate/Default",
+    "MA": "https://atlas-myrmv.massdot.state.ma.us/myrmv/_/",
+    "MI": "https://dsvsesvc.sos.state.mi.us/TAP/_/",
+    "MN": "https://dps.mn.gov/divisions/dvs/Pages/personalized-plates.aspx",
+    "MS": "https://www.dor.ms.gov/motor-vehicle/license-tags-702",
+    "MO": "https://dor.mo.gov/motor-vehicle/plates/personalized.html",
+    "MT": "https://app.mt.gov/vprs/",
+    "NE": "https://www.nebraska.gov/dmv/plate/",
+    "NV": "https://dmvapp.nv.gov/dmv/vr/plateav/plateav_input.aspx",
+    "NH": "https://www.dmv.nh.gov/vanity-plates",
+    "NJ": "https://www.state.nj.us/mvc/vehicles/personalized.htm",
+    "NM": "https://www.mvd.newmexico.gov/vehicles/license-plates/personalized-plates/",
+    "NY": "https://transact.dmv.ny.gov/iplateorder/",
+    "NC": "https://www.ncdot.gov/dmv/title-registration/license-plates/Pages/personalized.aspx",
+    "ND": "https://apps.nd.gov/dot/mv/mvrenewal/plateAvailability.htm",
+    "OH": "https://bmv.ohio.gov/vr-sp-personalized.aspx",
+    "OK": "https://www.service.ok.gov/sot/customplate",
+    "OR": "https://dmv2u.oregon.gov/eServices/_/#1",
+    "PA": "https://www.dot.state.pa.us/personalizedplate/ppinfo.jsp",
+    "RI": "https://www.dmv.ri.gov/registrations/plates/vanity.php",
+    "SC": "https://www.scdmvonline.com/Vehicle-Owners/License-Plates/Personalized-Plates",
+    "SD": "https://dor.sd.gov/motor-vehicles/personalized-plates/",
+    "TN": "https://www.tn.gov/revenue/title-and-registration/license-plates/personalized-plates.html",
+    "TX": "https://www.myplates.com/",
+    "UT": "https://dmv.utah.gov/plates/personalized",
+    "VT": "https://dmv.vermont.gov/registrations/license-plates/vanity-personalized-plates",
+    "VA": "https://www.dmv.virginia.gov/vehicles/license-plates/personalized",
+    "WA": "https://www.dol.wa.gov/vehicles-and-boats/vehicle-registration/license-plates-702/personalized-plates",
+    "WV": "https://transportation.wv.gov/DMV/Vehicle-Services/Registration/Pages/Personalized-Plates.aspx",
+    "WI": "https://trust.dot.state.wi.us/pprs/pprsMain.do",
+    "WY": "https://www.dot.state.wy.us/home/titles_plates_registration/custom-plates.html",
+    "DC": "https://dmv.dc.gov/service/personalized-and-specialty-tags",
+}
+
+
+def get_state_plate_url(state: str) -> str:
+    """Get the official DMV plate check URL for a state."""
+    return STATE_PLATE_CHECK_URLS.get(state.upper(), "")
