@@ -1,0 +1,265 @@
+import 'package:flutter/material.dart';
+import '../widgets/plate_input.dart';
+import '../utils/plate_validator.dart';
+import '../services/api_service.dart';
+import 'results_screen.dart';
+import 'suggestions_screen.dart';
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final _plateController = TextEditingController();
+  final _interestController = TextEditingController();
+  bool _isCheckingPlate = false;
+  bool _isLoadingSuggestions = false;
+
+  @override
+  void dispose() {
+    _plateController.dispose();
+    _interestController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _checkPlate() async {
+    final plate = _plateController.text.trim().toUpperCase();
+    final validation = PlateValidator.validate(plate);
+
+    if (!validation.isValid) {
+      _showError(validation.message);
+      return;
+    }
+
+    setState(() => _isCheckingPlate = true);
+
+    try {
+      final result = await ApiService.checkPlate(plate);
+      if (!mounted) return;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => ResultsScreen(result: result)),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      _showError('Could not check plate. Is the server running?');
+    } finally {
+      if (mounted) setState(() => _isCheckingPlate = false);
+    }
+  }
+
+  Future<void> _getSuggestions() async {
+    final interest = _interestController.text.trim();
+    if (interest.isEmpty) {
+      _showError('Please enter an area of interest.');
+      return;
+    }
+
+    setState(() => _isLoadingSuggestions = true);
+
+    try {
+      final suggestions = await ApiService.getSuggestions(interest);
+      if (!mounted) return;
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => SuggestionsScreen(
+            interest: interest,
+            initialSuggestions: suggestions,
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      _showError('Could not get suggestions. Is the server running?');
+    } finally {
+      if (mounted) setState(() => _isLoadingSuggestions = false);
+    }
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red[700]),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F7FA),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 500),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // App Header
+                  const Icon(Icons.directions_car, size: 64, color: Colors.blue),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'TagSnag',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1A237E),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Snag Your Perfect Plate',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                  ),
+                  const SizedBox(height: 40),
+
+                  // Check a Plate section
+                  _buildSectionCard(
+                    title: 'Check a Plate',
+                    subtitle: 'See if a specific plate is already taken',
+                    child: Column(
+                      children: [
+                        PlateInput(
+                          controller: _plateController,
+                          hintText: 'GODAWGS',
+                          onSubmit: _checkPlate,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Max 7 characters  |  Letters, numbers & spaces',
+                          style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                        ),
+                        const SizedBox(height: 16),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 48,
+                          child: ElevatedButton.icon(
+                            onPressed: _isCheckingPlate ? null : _checkPlate,
+                            icon: _isCheckingPlate
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                  )
+                                : const Icon(Icons.search),
+                            label: Text(_isCheckingPlate ? 'Checking...' : 'Check Availability'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue[700],
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Divider
+                  Row(
+                    children: [
+                      const Expanded(child: Divider()),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text('OR', style: TextStyle(color: Colors.grey[500], fontWeight: FontWeight.bold)),
+                      ),
+                      const Expanded(child: Divider()),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+
+                  // AI Suggestions section
+                  _buildSectionCard(
+                    title: 'Get AI Plate Ideas',
+                    subtitle: 'Tell us your interest and we\'ll suggest plates',
+                    child: Column(
+                      children: [
+                        TextField(
+                          controller: _interestController,
+                          textCapitalization: TextCapitalization.sentences,
+                          decoration: InputDecoration(
+                            hintText: 'e.g. Georgia Bulldogs, fishing, my church...',
+                            hintStyle: TextStyle(color: Colors.grey[400]),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                          ),
+                          onSubmitted: (_) => _getSuggestions(),
+                        ),
+                        const SizedBox(height: 16),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 48,
+                          child: ElevatedButton.icon(
+                            onPressed: _isLoadingSuggestions ? null : _getSuggestions,
+                            icon: _isLoadingSuggestions
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                  )
+                                : const Icon(Icons.auto_awesome),
+                            label: Text(_isLoadingSuggestions ? 'Generating...' : 'Suggest Plates'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.deepPurple,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionCard({
+    required String title,
+    required String subtitle,
+    required Widget child,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 4),
+          Text(subtitle, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+          const SizedBox(height: 20),
+          child,
+        ],
+      ),
+    );
+  }
+}

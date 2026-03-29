@@ -1,0 +1,185 @@
+import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../models/plate_result.dart';
+
+class ResultsScreen extends StatelessWidget {
+  final PlateResult result;
+
+  const ResultsScreen({super.key, required this.result});
+
+  IconData get _statusIcon {
+    switch (result.status) {
+      case 'not_found':
+        return Icons.check_circle;
+      case 'assigned':
+        return Icons.cancel;
+      case 'invalid':
+        return Icons.error;
+      default:
+        return Icons.open_in_new;
+    }
+  }
+
+  Color get _statusColor {
+    switch (result.status) {
+      case 'not_found':
+        return Colors.green;
+      case 'assigned':
+        return Colors.red;
+      case 'invalid':
+        return Colors.red;
+      default:
+        return Colors.blue;
+    }
+  }
+
+  String get _statusLabel {
+    switch (result.status) {
+      case 'not_found':
+        return 'Likely Available!';
+      case 'assigned':
+        return 'Already Taken';
+      case 'invalid':
+        return 'Invalid Format';
+      default:
+        return 'Check Availability';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F7FA),
+      appBar: AppBar(
+        title: const Text('Results'),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black87,
+        elevation: 0,
+      ),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 500),
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Plate display
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.blue[800]!, width: 3),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        'GEORGIA',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue[800],
+                          letterSpacing: 4,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        result.plate,
+                        style: const TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 6,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 40),
+
+                // Status icon
+                Icon(_statusIcon, size: 72, color: _statusColor),
+                const SizedBox(height: 16),
+
+                // Status label
+                Text(
+                  _statusLabel,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: _statusColor,
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // Message
+                Text(
+                  result.message,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                ),
+                const SizedBox(height: 32),
+
+                // Official check button (when status is unknown)
+                if (result.officialCheckUrl.isNotEmpty) ...[
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52,
+                    child: ElevatedButton.icon(
+                      onPressed: () async {
+                        final url = Uri.parse(result.officialCheckUrl);
+                        if (await canLaunchUrl(url)) {
+                          await launchUrl(url, mode: LaunchMode.externalApplication);
+                        }
+                      },
+                      icon: const Icon(Icons.open_in_new),
+                      label: const Text('Check on Georgia DRIVES'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue[800],
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'The official site will confirm if this plate is available',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 13, color: Colors.grey[500]),
+                  ),
+                  const SizedBox(height: 24),
+                ],
+
+                // Back button
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: OutlinedButton.icon(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.arrow_back),
+                    label: const Text('Check Another Plate'),
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

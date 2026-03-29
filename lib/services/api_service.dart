@@ -1,0 +1,58 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../models/plate_result.dart';
+import '../models/suggestion.dart';
+
+class ApiService {
+  // TODO: Update with your deployed backend URL
+  static const String baseUrl = 'http://localhost:8000/api';
+
+  static Future<PlateResult> checkPlate(String plate, {String state = 'GA'}) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/check-plate'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'plate': plate, 'state': state}),
+    );
+
+    if (response.statusCode == 200) {
+      return PlateResult.fromJson(jsonDecode(response.body));
+    }
+    throw Exception('Failed to check plate: ${response.statusCode}');
+  }
+
+  static Future<List<String>> getSuggestions(String interest, {String state = 'GA'}) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/suggest'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'interest': interest, 'state': state}),
+    );
+
+    if (response.statusCode == 200) {
+      return SuggestResponse.fromJson(jsonDecode(response.body)).suggestions;
+    }
+    throw Exception('Failed to get suggestions: ${response.statusCode}');
+  }
+
+  static Future<ChatRefineResponse> chatRefine({
+    required String interest,
+    required String message,
+    required List<Map<String, String>> history,
+    String state = 'GA',
+  }) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/chat-refine'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'interest': interest,
+        'message': message,
+        'history': history,
+        'state': state,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return ChatRefineResponse.fromJson(jsonDecode(response.body));
+    }
+    throw Exception('Failed to refine: ${response.statusCode}');
+  }
+}
