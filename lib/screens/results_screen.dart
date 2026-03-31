@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/plate_result.dart';
 import '../utils/us_states.dart';
@@ -137,6 +138,15 @@ class ResultsScreen extends StatelessWidget {
                     height: 52,
                     child: ElevatedButton.icon(
                       onPressed: () async {
+                        await Clipboard.setData(ClipboardData(text: result.plate));
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('${result.plate} copied — paste it on the DMV site'),
+                              duration: const Duration(seconds: 3),
+                            ),
+                          );
+                        }
                         final url = Uri.parse(result.officialCheckUrl);
                         if (await canLaunchUrl(url)) {
                           await launchUrl(url, mode: LaunchMode.externalApplication);

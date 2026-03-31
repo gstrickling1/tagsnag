@@ -7,12 +7,14 @@ class ChatRefineScreen extends StatefulWidget {
   final String interest;
   final List<String> existingSuggestions;
   final String state;
+  final String vehicleType;
 
   const ChatRefineScreen({
     super.key,
     required this.interest,
     required this.existingSuggestions,
     this.state = 'GA',
+    this.vehicleType = 'car',
   });
 
   @override
@@ -64,6 +66,7 @@ class _ChatRefineScreenState extends State<ChatRefineScreen> {
         message: text,
         history: _apiHistory,
         state: widget.state,
+        vehicleType: widget.vehicleType,
       );
 
       _apiHistory.add({'role': 'user', 'content': text});
@@ -94,7 +97,7 @@ class _ChatRefineScreenState extends State<ChatRefineScreen> {
 
   Future<void> _checkPlate(String plate) async {
     try {
-      final result = await ApiService.checkPlate(plate, state: widget.state);
+      final result = await ApiService.checkPlate(plate, state: widget.state, vehicleType: widget.vehicleType);
       if (!mounted) return;
       setState(() => _checkedStatuses[plate] = result.status);
       Navigator.push(

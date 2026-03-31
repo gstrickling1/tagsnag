@@ -58,20 +58,37 @@ STATE_RULES = {
 }
 
 
-def get_rules(state: str) -> dict | None:
-    return STATE_RULES.get(state.upper())
+MOTORCYCLE_MAX_LENGTH = {
+    "AL": 5, "AK": 5, "AZ": 5, "AR": 6, "CA": 5, "CO": 6, "CT": 6, "DE": 5,
+    "FL": 6, "GA": 6, "HI": 6, "ID": 6, "IL": 6, "IN": 6, "IA": 6, "KS": 5,
+    "KY": 5, "LA": 6, "ME": 6, "MD": 6, "MA": 5, "MI": 5, "MN": 6, "MS": 6,
+    "MO": 5, "MT": 6, "NE": 6, "NV": 6, "NH": 5, "NJ": 5, "NM": 6, "NY": 6,
+    "NC": 7, "ND": 6, "OH": 5, "OK": 6, "OR": 6, "PA": 5, "RI": 5, "SC": 6,
+    "SD": 6, "TN": 6, "TX": 4, "UT": 4, "VT": 6, "VA": 6, "WA": 6, "WV": 6,
+    "WI": 5, "WY": 5, "DC": 5,
+}
+
+
+def get_rules(state: str, vehicle_type: str = "car") -> dict | None:
+    rules = STATE_RULES.get(state.upper())
+    if not rules:
+        return None
+    if vehicle_type == "motorcycle":
+        mc_max = MOTORCYCLE_MAX_LENGTH.get(state.upper(), rules["max_length"] - 1)
+        rules = {**rules, "max_length": mc_max}
+    return rules
 
 
 def get_all_states() -> list[str]:
     return sorted(STATE_RULES.keys())
 
 
-def validate_plate(plate: str, state: str = "GA") -> tuple[bool, str]:
+def validate_plate(plate: str, state: str = "GA", vehicle_type: str = "car") -> tuple[bool, str]:
     """Validate a plate string against state rules.
 
     Returns (is_valid, message).
     """
-    rules = get_rules(state)
+    rules = get_rules(state, vehicle_type)
     if not rules:
         return False, f"Unsupported state: {state}"
 
@@ -81,7 +98,8 @@ def validate_plate(plate: str, state: str = "GA") -> tuple[bool, str]:
         return False, "Plate cannot be empty."
 
     if len(plate_upper) > rules["max_length"]:
-        return False, f"Too long: max {rules['max_length']} characters (got {len(plate_upper)})."
+        label = "motorcycle" if vehicle_type == "motorcycle" else "passenger"
+        return False, f"Too long for {label} plates: max {rules['max_length']} characters (got {len(plate_upper)})."
 
     min_len = rules.get("min_length", 1)
     if len(plate_upper) < min_len:

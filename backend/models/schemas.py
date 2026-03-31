@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 class PlateCheckRequest(BaseModel):
     plate: str = Field(..., description="The vanity plate text to check")
     state: str = Field(default="GA", description="State abbreviation")
+    vehicle_type: str = Field(default="car", description="'car' or 'motorcycle'")
 
 
 class PlateCheckResponse(BaseModel):
@@ -17,6 +18,7 @@ class PlateCheckResponse(BaseModel):
 class SuggestRequest(BaseModel):
     interest: str = Field(..., description="User's area of interest")
     state: str = Field(default="GA", description="State abbreviation")
+    vehicle_type: str = Field(default="car", description="'car' or 'motorcycle'")
 
 
 class SuggestResponse(BaseModel):
@@ -28,6 +30,7 @@ class ChatRefineRequest(BaseModel):
     message: str = Field(..., description="User's refinement message")
     history: list[dict] = Field(default_factory=list, description="Conversation history")
     state: str = Field(default="GA")
+    vehicle_type: str = Field(default="car", description="'car' or 'motorcycle'")
 
 
 class ChatRefineResponse(BaseModel):

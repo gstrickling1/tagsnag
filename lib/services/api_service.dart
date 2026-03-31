@@ -7,11 +7,11 @@ class ApiService {
   // TODO: Update with your deployed backend URL
   static const String baseUrl = 'https://tagsnag-qs2s.onrender.com/api';
 
-  static Future<PlateResult> checkPlate(String plate, {String state = 'GA'}) async {
+  static Future<PlateResult> checkPlate(String plate, {String state = 'GA', String vehicleType = 'car'}) async {
     final response = await http.post(
       Uri.parse('$baseUrl/check-plate'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'plate': plate, 'state': state}),
+      body: jsonEncode({'plate': plate, 'state': state, 'vehicle_type': vehicleType}),
     );
 
     if (response.statusCode == 200) {
@@ -20,11 +20,11 @@ class ApiService {
     throw Exception('Failed to check plate: ${response.statusCode}');
   }
 
-  static Future<List<String>> getSuggestions(String interest, {String state = 'GA'}) async {
+  static Future<List<String>> getSuggestions(String interest, {String state = 'GA', String vehicleType = 'car'}) async {
     final response = await http.post(
       Uri.parse('$baseUrl/suggest'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'interest': interest, 'state': state}),
+      body: jsonEncode({'interest': interest, 'state': state, 'vehicle_type': vehicleType}),
     );
 
     if (response.statusCode == 200) {
@@ -38,6 +38,7 @@ class ApiService {
     required String message,
     required List<Map<String, String>> history,
     String state = 'GA',
+    String vehicleType = 'car',
   }) async {
     final response = await http.post(
       Uri.parse('$baseUrl/chat-refine'),
@@ -47,6 +48,7 @@ class ApiService {
         'message': message,
         'history': history,
         'state': state,
+        'vehicle_type': vehicleType,
       }),
     );
 

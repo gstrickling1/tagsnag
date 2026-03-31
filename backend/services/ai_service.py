@@ -3,12 +3,12 @@ import os
 
 from google import genai
 
-from services.validator import validate_plate
+from services.validator import get_rules, validate_plate
 
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 SUGGEST_SYSTEM_PROMPT = """You are a creative vanity license plate generator.
-Rules for {state} plates:
+Rules for {state} {vehicle_label} plates:
 - Maximum {max_length} characters
 - Only letters A-Z, digits 0-9, and spaces
 - Total length including spaces must be {max_length} or fewer
@@ -23,7 +23,7 @@ Return ONLY a JSON array of uppercase strings. No explanation, no markdown, no c
 Example: ["GODAWGS","UGA4EVR","DAWGN8N"]"""
 
 CHAT_SYSTEM_PROMPT = """You are a creative vanity license plate assistant helping a user find the perfect plate.
-Rules for {state} plates:
+Rules for {state} {vehicle_label} plates:
 - Maximum {max_length} characters
 - Only letters A-Z, digits 0-9, and spaces
 - Total length including spaces must be {max_length} or fewer
@@ -35,8 +35,11 @@ At the end of your response, include a JSON array of your new suggestions on its
 prefixed with "SUGGESTIONS:" — e.g., SUGGESTIONS: ["PLATE1","PLATE2"]"""
 
 
-async def generate_suggestions(interest: str, state: str = "GA") -> list[str]:
-    rules = {"state": state, "max_length": 7}
+async def generate_suggestions(interest: str, state: str = "GA", vehicle_type: str = "car") -> list[str]:
+    state_rules = get_rules(state, vehicle_type)
+    max_length = state_rules["max_length"] if state_rules else 7
+    vehicle_label = "motorcycle" if vehicle_type == "motorcycle" else "passenger"
+    rules = {"state": state, "max_length": max_length, "vehicle_label": vehicle_label}
     system = SUGGEST_SYSTEM_PROMPT.format(**rules)
 
     response = client.models.generate_content(
@@ -70,13 +73,16 @@ async def generate_suggestions(interest: str, state: str = "GA") -> list[str]:
             return []
 
     # Filter to only valid plates
-    return [p.upper() for p in plates if validate_plate(p, state)[0]]
+    return [p.upper() for p in plates if validate_plate(p, state, vehicle_type)[0]]
 
 
 async def chat_refine(
-    interest: str, message: str, history: list[dict], state: str = "GA"
+    interest: str, message: str, history: list[dict], state: str = "GA", vehicle_type: str = "car"
 ) -> tuple[list[str], str]:
-    rules = {"state": state, "max_length": 7, "interest": interest}
+    state_rules = get_rules(state, vehicle_type)
+    max_length = state_rules["max_length"] if state_rules else 7
+    vehicle_label = "motorcycle" if vehicle_type == "motorcycle" else "passenger"
+    rules = {"state": state, "max_length": max_length, "interest": interest, "vehicle_label": vehicle_label}
     system = CHAT_SYSTEM_PROMPT.format(**rules)
 
     # Build Gemini conversation format
@@ -107,7 +113,7 @@ async def chat_refine(
             json_part = line.split("SUGGESTIONS:", 1)[1].strip()
             try:
                 suggestions = json.loads(json_part)
-                suggestions = [p.upper() for p in suggestions if validate_plate(p, state)[0]]
+                suggestions = [p.upper() for p in suggestions if validate_plate(p, state, vehicle_type)[0]]
             except json.JSONDecodeError:
                 pass
         else:

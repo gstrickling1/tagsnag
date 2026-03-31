@@ -12,7 +12,7 @@ router = APIRouter(prefix="/api", tags=["plates"])
 @router.post("/check-plate", response_model=PlateCheckResponse)
 async def check_plate_endpoint(req: PlateCheckRequest):
     plate = req.plate.upper().strip()
-    is_valid, msg = validate_plate(plate, req.state)
+    is_valid, msg = validate_plate(plate, req.state, req.vehicle_type)
 
     if not is_valid:
         return PlateCheckResponse(plate=plate, valid=False, status="invalid", message=msg)

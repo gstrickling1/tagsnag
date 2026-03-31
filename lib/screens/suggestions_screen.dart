@@ -8,12 +8,14 @@ class SuggestionsScreen extends StatefulWidget {
   final String interest;
   final List<String> initialSuggestions;
   final String state;
+  final String vehicleType;
 
   const SuggestionsScreen({
     super.key,
     required this.interest,
     required this.initialSuggestions,
     this.state = 'GA',
+    this.vehicleType = 'car',
   });
 
   @override
@@ -24,6 +26,7 @@ class _SuggestionsScreenState extends State<SuggestionsScreen> {
   late List<String> _suggestions;
   final Map<String, String> _checkedStatuses = {};
   String? _checkingPlate;
+  bool _loadingMore = false;
 
   @override
   void initState() {
@@ -37,7 +40,7 @@ class _SuggestionsScreenState extends State<SuggestionsScreen> {
     setState(() => _checkingPlate = plate);
 
     try {
-      final result = await ApiService.checkPlate(plate, state: widget.state);
+      final result = await ApiService.checkPlate(plate, state: widget.state, vehicleType: widget.vehicleType);
       if (!mounted) return;
 
       setState(() {
@@ -142,7 +145,61 @@ class _SuggestionsScreenState extends State<SuggestionsScreen> {
                     onPlateTap: _checkPlate,
                   ),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: 16),
+
+                // More Ideas button
+                SizedBox(
+                  height: 44,
+                  child: OutlinedButton.icon(
+                    onPressed: _loadingMore
+                        ? null
+                        : () async {
+                            setState(() => _loadingMore = true);
+                            try {
+                              final more = await ApiService.getSuggestions(
+                                widget.interest,
+                                state: widget.state,
+                                vehicleType: widget.vehicleType,
+                              );
+                              if (!mounted) return;
+                              setState(() {
+                                for (final s in more) {
+                                  if (!_suggestions.contains(s)) {
+                                    _suggestions.add(s);
+                                  }
+                                }
+                                _loadingMore = false;
+                              });
+                            } catch (e) {
+                              if (!mounted) return;
+                              setState(() => _loadingMore = false);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: const Text('Could not load more ideas'),
+                                  backgroundColor: Colors.red[700],
+                                ),
+                              );
+                            }
+                          },
+                    icon: _loadingMore
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.add),
+                    label: Text(_loadingMore ? 'Loading...' : 'More Ideas'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.deepPurple,
+                      side: const BorderSide(color: Colors.deepPurple),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
 
                 // Refine with AI Chat button
                 SizedBox(
@@ -156,6 +213,7 @@ class _SuggestionsScreenState extends State<SuggestionsScreen> {
                             interest: widget.interest,
                             existingSuggestions: _suggestions,
                             state: widget.state,
+                            vehicleType: widget.vehicleType,
                           ),
                         ),
                       ).then((newSuggestions) {

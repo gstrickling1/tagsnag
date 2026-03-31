@@ -17,6 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final _plateController = TextEditingController();
   final _interestController = TextEditingController();
   String? _selectedState;
+  String _vehicleType = 'car';
   bool _isCheckingPlate = false;
   bool _isLoadingSuggestions = false;
 
@@ -34,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     final plate = _plateController.text.trim().toUpperCase();
-    final validation = PlateValidator.validate(plate, state: _selectedState);
+    final validation = PlateValidator.validate(plate, state: _selectedState, vehicleType: _vehicleType);
 
     if (!validation.isValid) {
       _showError(validation.message);
@@ -44,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _isCheckingPlate = true);
 
     try {
-      final result = await ApiService.checkPlate(plate, state: _selectedState!);
+      final result = await ApiService.checkPlate(plate, state: _selectedState!, vehicleType: _vehicleType);
       if (!mounted) return;
       Navigator.push(
         context,
@@ -73,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _isLoadingSuggestions = true);
 
     try {
-      final suggestions = await ApiService.getSuggestions(interest, state: _selectedState!);
+      final suggestions = await ApiService.getSuggestions(interest, state: _selectedState!, vehicleType: _vehicleType);
       if (!mounted) return;
       Navigator.push(
         context,
@@ -82,6 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
             interest: interest,
             initialSuggestions: suggestions,
             state: _selectedState!,
+            vehicleType: _vehicleType,
           ),
         ),
       );
@@ -137,6 +139,76 @@ class _HomeScreenState extends State<HomeScreen> {
                     selectedState: _selectedState,
                     onChanged: (state) => setState(() => _selectedState = state),
                   ),
+                  const SizedBox(height: 16),
+
+                  // Vehicle Type Toggle
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => setState(() => _vehicleType = 'car'),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                color: _vehicleType == 'car' ? Colors.white : Colors.transparent,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: _vehicleType == 'car'
+                                    ? [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 4)]
+                                    : null,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.directions_car, size: 20,
+                                      color: _vehicleType == 'car' ? Colors.blue[700] : Colors.grey[600]),
+                                  const SizedBox(width: 6),
+                                  Text('Car / Truck',
+                                      style: TextStyle(
+                                        fontWeight: _vehicleType == 'car' ? FontWeight.w600 : FontWeight.normal,
+                                        color: _vehicleType == 'car' ? Colors.blue[700] : Colors.grey[600],
+                                      )),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => setState(() => _vehicleType = 'motorcycle'),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                color: _vehicleType == 'motorcycle' ? Colors.white : Colors.transparent,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: _vehicleType == 'motorcycle'
+                                    ? [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 4)]
+                                    : null,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.two_wheeler, size: 20,
+                                      color: _vehicleType == 'motorcycle' ? Colors.blue[700] : Colors.grey[600]),
+                                  const SizedBox(width: 6),
+                                  Text('Motorcycle',
+                                      style: TextStyle(
+                                        fontWeight: _vehicleType == 'motorcycle' ? FontWeight.w600 : FontWeight.normal,
+                                        color: _vehicleType == 'motorcycle' ? Colors.blue[700] : Colors.grey[600],
+                                      )),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 24),
 
                   // Check a Plate section
@@ -150,13 +222,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           hintText: 'GOJKTS',
                           onSubmit: _checkPlate,
                           maxLength: _selectedState != null && stateRules.containsKey(_selectedState)
-                              ? stateRules[_selectedState]!.maxLength
+                              ? stateRules[_selectedState]!.maxLengthFor(_vehicleType)
                               : 8,
                         ),
                         const SizedBox(height: 8),
                         Text(
                           _selectedState != null && stateRules.containsKey(_selectedState)
-                              ? stateRules[_selectedState]!.notes
+                              ? '${stateRules[_selectedState]!.notes}${_vehicleType == 'motorcycle' ? ' Motorcycle: max ${stateRules[_selectedState]!.motorcycleMaxLength} characters.' : ''}'
                               : 'Select a state to see plate rules',
                           style: TextStyle(fontSize: 12, color: Colors.grey[500]),
                         ),
