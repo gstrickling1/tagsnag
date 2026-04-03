@@ -97,8 +97,13 @@ class _HomeScreenState extends State<HomeScreen> {
       );
 
       if (!mounted) return;
-      // Add to history
-      final status = outcome == 'unavailable' ? 'unavailable' : 'checked';
+      // Add to history — mark unavailable if user said so OR if API returned 'assigned'
+      final String status;
+      if (outcome == 'unavailable' || result.status == 'assigned') {
+        status = 'unavailable';
+      } else {
+        status = 'checked';
+      }
       setState(() {
         // Remove if already in history, then add at top
         _plateHistory.removeWhere((h) => h['plate'] == plate);
@@ -373,11 +378,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      if (isUnavailable)
-                                        Padding(
-                                          padding: const EdgeInsets.only(right: 4),
-                                          child: Icon(Icons.close, size: 16, color: Colors.red[700]),
-                                        ),
+                                      Icon(
+                                        isUnavailable ? Icons.cancel : Icons.check_circle_outline,
+                                        size: 18,
+                                        color: isUnavailable ? Colors.red[600] : Colors.green[600],
+                                      ),
+                                      const SizedBox(width: 6),
                                       Text(
                                         entry['plate']!,
                                         style: TextStyle(
@@ -388,7 +394,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           decoration: isUnavailable
                                               ? TextDecoration.lineThrough
                                               : TextDecoration.none,
-                                          decorationColor: Colors.red[700],
+                                          decorationColor: Colors.red[600],
                                           decorationThickness: 2.5,
                                         ),
                                       ),
