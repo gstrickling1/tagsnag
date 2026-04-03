@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../models/plate_style.dart';
 import '../widgets/plate_input.dart';
 import '../widgets/state_selector.dart';
 import '../utils/plate_validator.dart';
@@ -49,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     try {
       // Try to load plate styles for this state
+      PlateStyle? pickedStyle;
       try {
         final stylesResponse = await ApiService.getPlateStyles(
           _selectedState!,
@@ -59,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         if (stylesResponse.supported && stylesResponse.styles.isNotEmpty) {
           // Show plate style picker
-          final selectedStyle = await Navigator.push(
+          pickedStyle = await Navigator.push<PlateStyle>(
             context,
             MaterialPageRoute(
               builder: (_) => PlateStylePickerScreen(
@@ -71,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
 
-          if (!mounted || selectedStyle == null) {
+          if (!mounted || pickedStyle == null) {
             setState(() => _isCheckingPlate = false);
             return;
           }
@@ -87,7 +89,11 @@ class _HomeScreenState extends State<HomeScreen> {
       if (!mounted) return;
       final outcome = await Navigator.push<String>(
         context,
-        MaterialPageRoute(builder: (_) => ResultsScreen(result: result, state: _selectedState!)),
+        MaterialPageRoute(builder: (_) => ResultsScreen(
+          result: result,
+          state: _selectedState!,
+          selectedStyle: pickedStyle,
+        )),
       );
 
       if (!mounted) return;

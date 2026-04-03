@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/plate_result.dart';
+import '../models/plate_style.dart';
 import '../utils/us_states.dart';
 import 'claim_guide_screen.dart';
 
 class ResultsScreen extends StatelessWidget {
   final PlateResult result;
   final String state;
+  final PlateStyle? selectedStyle;
 
-  const ResultsScreen({super.key, required this.result, this.state = 'GA'});
+  const ResultsScreen({super.key, required this.result, this.state = 'GA', this.selectedStyle});
 
   IconData get _statusIcon {
     switch (result.status) {
@@ -106,6 +108,48 @@ class ResultsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                // Selected plate style
+                if (selectedStyle != null) ...[
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: selectedStyle!.primaryColor.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: selectedStyle!.primaryColor.withValues(alpha: 0.3)),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 28,
+                          height: 18,
+                          decoration: BoxDecoration(
+                            color: selectedStyle!.primaryColor,
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          selectedStyle!.name,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: selectedStyle!.primaryColor,
+                          ),
+                        ),
+                        if (selectedStyle!.extraFee != null) ...[
+                          const SizedBox(width: 8),
+                          Text(
+                            selectedStyle!.extraFee!,
+                            style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
+
                 const SizedBox(height: 40),
 
                 // Status icon
