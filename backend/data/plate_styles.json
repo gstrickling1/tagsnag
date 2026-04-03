@@ -1,0 +1,49 @@
+{
+  "AZ": {
+    "styles": [
+      {"id": "az-standard", "name": "Standard", "category": "standard", "supports_vanity": true, "max_length": 7, "motorcycle_max_length": 5, "extra_fee": null, "colors": ["#B22234", "#FFFFFF"]},
+      {"id": "az-agriculture", "name": "Arizona Agriculture", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#2E7D32", "#FFF8E1"]},
+      {"id": "az-highways", "name": "Arizona Highways", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#E65100", "#FFF3E0"]},
+      {"id": "az-diamondbacks", "name": "Arizona Diamondbacks", "category": "sports", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#A71930", "#000000"]},
+      {"id": "az-asu", "name": "Arizona State University", "category": "collegiate", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#8C1D40", "#FFC627"]},
+      {"id": "az-uofa", "name": "University of Arizona", "category": "collegiate", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#CC0033", "#003366"]},
+      {"id": "az-nau", "name": "Northern Arizona University", "category": "collegiate", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#003466", "#FFC425"]},
+      {"id": "az-suns", "name": "Phoenix Suns", "category": "sports", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#1D1160", "#E56020"]},
+      {"id": "az-girl-scouts", "name": "Girl Scouts", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#00AE58", "#FFFFFF"]},
+      {"id": "az-alice-cooper", "name": "Alice Cooper's Solid Rock", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#B71C1C", "#212121"]},
+      {"id": "az-hunger-relief", "name": "Hunger Relief", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#FF6F00", "#FFFFFF"]},
+      {"id": "az-in-loving-memory", "name": "In Loving Memory", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#4A148C", "#E1BEE7"]},
+      {"id": "az-share-the-road", "name": "Share the Road", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": 5, "extra_fee": "$25/yr", "colors": ["#F57F17", "#FFFFFF"]},
+      {"id": "az-choose-life", "name": "Choose Life", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#FFD600", "#1565C0"]},
+      {"id": "az-route-66", "name": "Historic Route 66", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#795548", "#FFF8E1"]},
+      {"id": "az-donate-life", "name": "Donate Life", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#00838F", "#E0F7FA"]},
+      {"id": "az-veteran", "name": "Veteran", "category": "military", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": 5, "extra_fee": null, "colors": ["#1B5E20", "#FFFFFF"]},
+      {"id": "az-women-veterans", "name": "Women Veterans", "category": "military", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": null, "colors": ["#4A148C", "#FFFFFF"]},
+      {"id": "az-special-olympics", "name": "Special Olympics Arizona", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#D32F2F", "#FFEB3B"]},
+      {"id": "az-wildlife", "name": "Conserving Wildlife", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#33691E", "#DCEDC8"]}
+    ]
+  },
+  "GA": {
+    "styles": [
+      {"id": "ga-standard", "name": "Standard (Peach)", "category": "standard", "supports_vanity": true, "max_length": 7, "motorcycle_max_length": 6, "extra_fee": null, "colors": ["#FF8F00", "#FFFFFF"]},
+      {"id": "ga-uga", "name": "University of Georgia", "category": "collegiate", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#BA0C2F", "#000000"]},
+      {"id": "ga-gt", "name": "Georgia Tech", "category": "collegiate", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#003057", "#B3A369"]},
+      {"id": "ga-gsu", "name": "Georgia State University", "category": "collegiate", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#0039A6", "#FFFFFF"]},
+      {"id": "ga-kennesaw", "name": "Kennesaw State University", "category": "collegiate", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#FDBB30", "#000000"]},
+      {"id": "ga-southern", "name": "Georgia Southern University", "category": "collegiate", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#011E41", "#87714D"]},
+      {"id": "ga-braves", "name": "Atlanta Braves", "category": "sports", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#CE1141", "#13274F"]},
+      {"id": "ga-falcons", "name": "Atlanta Falcons", "category": "sports", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#A71930", "#000000"]},
+      {"id": "ga-hawks", "name": "Atlanta Hawks", "category": "sports", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#C8102E", "#FDB927"]},
+      {"id": "ga-united", "name": "Atlanta United", "category": "sports", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#80000A", "#A19060"]},
+      {"id": "ga-wildlife", "name": "Georgia Wildlife", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#2E7D32", "#E8F5E9"]},
+      {"id": "ga-give-life", "name": "Give Life (Organ Donor)", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#1565C0", "#E3F2FD"]},
+      {"id": "ga-firefighter", "name": "Firefighter", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#D32F2F", "#FFFFFF"]},
+      {"id": "ga-veteran", "name": "Veteran", "category": "military", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": 6, "extra_fee": null, "colors": ["#1B5E20", "#FFFFFF"]},
+      {"id": "ga-purple-heart", "name": "Purple Heart", "category": "military", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": null, "colors": ["#4A148C", "#FFFFFF"]},
+      {"id": "ga-god-bless", "name": "God Bless America", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#1565C0", "#FFCDD2"]},
+      {"id": "ga-share-road", "name": "Share the Road", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#F57F17", "#FFFFFF"]},
+      {"id": "ga-historic", "name": "Historic Vehicle", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": 6, "extra_fee": null, "colors": ["#37474F", "#ECEFF1"]},
+      {"id": "ga-choose-life", "name": "Choose Life", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$25/yr", "colors": ["#FFD600", "#1565C0"]}
+    ]
+  }
+}

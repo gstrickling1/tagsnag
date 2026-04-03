@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from models.schemas import PlateCheckRequest, PlateCheckResponse, StateRules
+from services.plate_styles import get_plate_styles
 from services.scraper import check_plate
 from services.state_claim_info import get_claim_info
 from services.state_urls import get_state_plate_url
@@ -34,6 +35,11 @@ async def check_plate_endpoint(req: PlateCheckRequest):
         message=messages.get(status, ""),
         official_check_url=official_url,
     )
+
+
+@router.get("/plate-styles/{state}")
+async def get_state_plate_styles(state: str, vehicle_type: str = "car"):
+    return get_plate_styles(state, vehicle_type)
 
 
 @router.get("/states")

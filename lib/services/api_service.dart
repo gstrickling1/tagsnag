@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/plate_result.dart';
+import '../models/plate_style.dart';
 import '../models/suggestion.dart';
 
 class ApiService {
@@ -56,6 +57,17 @@ class ApiService {
       return ChatRefineResponse.fromJson(jsonDecode(response.body));
     }
     throw Exception('Failed to refine: ${response.statusCode}');
+  }
+
+  static Future<PlateStylesResponse> getPlateStyles(String state, {String vehicleType = 'car'}) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/plate-styles/$state?vehicle_type=$vehicleType'),
+    );
+
+    if (response.statusCode == 200) {
+      return PlateStylesResponse.fromJson(jsonDecode(response.body));
+    }
+    throw Exception('Failed to get plate styles: ${response.statusCode}');
   }
 
   static Future<Map<String, dynamic>> getClaimInfo(String state) async {

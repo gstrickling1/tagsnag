@@ -3,6 +3,7 @@ import '../widgets/plate_input.dart';
 import '../widgets/state_selector.dart';
 import '../utils/plate_validator.dart';
 import '../services/api_service.dart';
+import 'plate_style_picker_screen.dart';
 import 'results_screen.dart';
 import 'suggestions_screen.dart';
 
@@ -45,6 +46,35 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _isCheckingPlate = true);
 
     try {
+      // Try to load plate styles for this state
+      final stylesResponse = await ApiService.getPlateStyles(
+        _selectedState!,
+        vehicleType: _vehicleType,
+      );
+
+      if (!mounted) return;
+
+      if (stylesResponse.supported && stylesResponse.styles.isNotEmpty) {
+        // Show plate style picker
+        final selectedStyle = await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => PlateStylePickerScreen(
+              plate: plate,
+              state: _selectedState!,
+              vehicleType: _vehicleType,
+              styles: stylesResponse.styles,
+            ),
+          ),
+        );
+
+        if (!mounted || selectedStyle == null) {
+          setState(() => _isCheckingPlate = false);
+          return;
+        }
+      }
+
+      // Check the plate
       final result = await ApiService.checkPlate(plate, state: _selectedState!, vehicleType: _vehicleType);
       if (!mounted) return;
       Navigator.push(
