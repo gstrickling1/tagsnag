@@ -49,32 +49,38 @@ class _HomeScreenState extends State<HomeScreen> {
 
     try {
       // Try to load plate styles for this state
-      final stylesResponse = await ApiService.getPlateStyles(
-        _selectedState!,
-        vehicleType: _vehicleType,
-      );
-
-      if (!mounted) return;
-
-      if (stylesResponse.supported && stylesResponse.styles.isNotEmpty) {
-        // Show plate style picker
-        final selectedStyle = await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => PlateStylePickerScreen(
-              plate: plate,
-              state: _selectedState!,
-              vehicleType: _vehicleType,
-              styles: stylesResponse.styles,
-            ),
-          ),
+      try {
+        final stylesResponse = await ApiService.getPlateStyles(
+          _selectedState!,
+          vehicleType: _vehicleType,
         );
 
-        if (!mounted || selectedStyle == null) {
-          setState(() => _isCheckingPlate = false);
-          return;
+        if (!mounted) return;
+
+        if (stylesResponse.supported && stylesResponse.styles.isNotEmpty) {
+          // Show plate style picker
+          final selectedStyle = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => PlateStylePickerScreen(
+                plate: plate,
+                state: _selectedState!,
+                vehicleType: _vehicleType,
+                styles: stylesResponse.styles,
+              ),
+            ),
+          );
+
+          if (!mounted || selectedStyle == null) {
+            setState(() => _isCheckingPlate = false);
+            return;
+          }
         }
+      } catch (_) {
+        // Plate styles endpoint not available — skip style picker
       }
+
+      if (!mounted) return;
 
       // Check the plate
       final result = await ApiService.checkPlate(plate, state: _selectedState!, vehicleType: _vehicleType);
