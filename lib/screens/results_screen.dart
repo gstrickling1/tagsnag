@@ -203,12 +203,31 @@ class ResultsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
 
+                // Mark as Unavailable button
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: OutlinedButton.icon(
+                    onPressed: () => Navigator.pop(context, 'unavailable'),
+                    icon: Icon(Icons.close, color: Colors.red[700]),
+                    label: Text('Not Available — Try Another',
+                        style: TextStyle(color: Colors.red[700])),
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: Colors.red[300]!),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+
                 // Back button
                 SizedBox(
                   width: double.infinity,
                   height: 48,
                   child: OutlinedButton.icon(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => Navigator.pop(context, 'checked'),
                     icon: const Icon(Icons.arrow_back),
                     label: const Text('Check Another Plate'),
                     style: OutlinedButton.styleFrom(

@@ -21,6 +21,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String _vehicleType = 'car';
   bool _isCheckingPlate = false;
   bool _isLoadingSuggestions = false;
+  // Plate history: list of {plate, status} where status is 'checked', 'unavailable', or 'available'
+  final List<Map<String, String>> _plateHistory = [];
 
   @override
   void dispose() {
@@ -77,10 +79,19 @@ class _HomeScreenState extends State<HomeScreen> {
       // Check the plate
       final result = await ApiService.checkPlate(plate, state: _selectedState!, vehicleType: _vehicleType);
       if (!mounted) return;
-      Navigator.push(
+      final outcome = await Navigator.push<String>(
         context,
         MaterialPageRoute(builder: (_) => ResultsScreen(result: result, state: _selectedState!)),
       );
+
+      if (!mounted) return;
+      // Add to history
+      final status = outcome == 'unavailable' ? 'unavailable' : 'checked';
+      setState(() {
+        // Remove if already in history, then add at top
+        _plateHistory.removeWhere((h) => h['plate'] == plate);
+        _plateHistory.insert(0, {'plate': plate, 'status': status});
+      });
     } catch (e) {
       if (!mounted) return;
       _showError('Could not check plate. Is the server running?');
@@ -288,6 +299,103 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
+                  // Plate history
+                  if (_plateHistory.isNotEmpty) ...[
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.04),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.history, size: 18, color: Colors.grey[600]),
+                              const SizedBox(width: 6),
+                              Text('Plates You\'ve Checked',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey[700],
+                                  )),
+                              const Spacer(),
+                              GestureDetector(
+                                onTap: () => setState(() => _plateHistory.clear()),
+                                child: Text('Clear',
+                                    style: TextStyle(fontSize: 12, color: Colors.grey[400])),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: _plateHistory.map((entry) {
+                              final isUnavailable = entry['status'] == 'unavailable';
+                              return GestureDetector(
+                                onTap: () {
+                                  // Toggle unavailable status on tap
+                                  setState(() {
+                                    entry['status'] = isUnavailable ? 'checked' : 'unavailable';
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: isUnavailable ? Colors.red[50] : Colors.blue[50],
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: isUnavailable ? Colors.red[200]! : Colors.blue[200]!,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      if (isUnavailable)
+                                        Padding(
+                                          padding: const EdgeInsets.only(right: 4),
+                                          child: Icon(Icons.close, size: 16, color: Colors.red[700]),
+                                        ),
+                                      Text(
+                                        entry['plate']!,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 2,
+                                          color: isUnavailable ? Colors.red[400] : Colors.blue[800],
+                                          decoration: isUnavailable
+                                              ? TextDecoration.lineThrough
+                                              : TextDecoration.none,
+                                          decorationColor: Colors.red[700],
+                                          decorationThickness: 2.5,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            'Tap a plate to toggle unavailable',
+                            style: TextStyle(fontSize: 11, color: Colors.grey[400]),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+
                   const SizedBox(height: 24),
 
                   // Divider

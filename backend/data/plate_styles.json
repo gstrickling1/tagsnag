@@ -1,4 +1,22 @@
 {
+  "CA": {
+    "styles": [
+      {"id": "ca-standard", "name": "Standard", "category": "standard", "supports_vanity": true, "max_length": 7, "motorcycle_max_length": 5, "extra_fee": null, "colors": ["#1565C0", "#FFFFFF"]},
+      {"id": "ca-legacy", "name": "Legacy (Black & Gold)", "category": "standard", "supports_vanity": true, "max_length": 7, "motorcycle_max_length": 5, "extra_fee": "$50 + $40/yr", "colors": ["#212121", "#FFD600"]},
+      {"id": "ca-whale-tail", "name": "Protect Our Coast & Ocean", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$50 + $40/yr", "colors": ["#0277BD", "#E1F5FE"]},
+      {"id": "ca-yosemite", "name": "Yosemite National Park", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$50 + $40/yr", "colors": ["#2E7D32", "#FFF8E1"]},
+      {"id": "ca-lake-tahoe", "name": "Lake Tahoe", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$50 + $40/yr", "colors": ["#01579B", "#FFD54F"]},
+      {"id": "ca-agriculture", "name": "Agriculture", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$50 + $40/yr", "colors": ["#F57F17", "#FFF9C4"]},
+      {"id": "ca-arts", "name": "Arts Council", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$50 + $40/yr", "colors": ["#6A1B9A", "#F3E5F5"]},
+      {"id": "ca-snoopy", "name": "California Museums (Snoopy)", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$50 + $40/yr", "colors": ["#D32F2F", "#FFFFFF"]},
+      {"id": "ca-breast-cancer", "name": "Breast Cancer Awareness", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$50 + $40/yr", "colors": ["#E91E63", "#FCE4EC"]},
+      {"id": "ca-pet-lover", "name": "Pet Lover", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$50 + $40/yr", "colors": ["#FF6F00", "#FFFFFF"]},
+      {"id": "ca-firefighter", "name": "Firefighter", "category": "specialty", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$50 + $40/yr", "colors": ["#B71C1C", "#FFCDD2"]},
+      {"id": "ca-veteran", "name": "Veteran", "category": "military", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": 5, "extra_fee": null, "colors": ["#1B5E20", "#FFFFFF"]},
+      {"id": "ca-gold-star", "name": "Gold Star Family", "category": "military", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": null, "colors": ["#F9A825", "#FFFFFF"]},
+      {"id": "ca-49ers", "name": "San Francisco 49ers", "category": "sports", "supports_vanity": true, "max_length": 6, "motorcycle_max_length": null, "extra_fee": "$50 + $40/yr", "colors": ["#AA0000", "#B3995D"]}
+    ]
+  },
   "AZ": {
     "styles": [
       {"id": "az-standard", "name": "Standard", "category": "standard", "supports_vanity": true, "max_length": 7, "motorcycle_max_length": 5, "extra_fee": null, "colors": ["#B22234", "#FFFFFF"]},
